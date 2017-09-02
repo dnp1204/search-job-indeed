@@ -13,15 +13,15 @@ const JOB_QUERY_PARAMS = {
   q: 'javascript'
 };
 
-const buildJobsUrl = zip => {
-  const query = qs.stringify({ ...JOB_QUERY_PARAMS, l: zip });
+const buildJobsUrl = (zip, term) => {
+  const query = qs.stringify({ ...JOB_QUERY_PARAMS, l: zip, q: term });
   return `${JOB_ROOT_URL}${query}`;
 };
 
-export const fetchJobs = (region, callback) => async dispatch => {
+export const fetchJobs = (region, term, callback) => async dispatch => {
   try {
     const zip = await reverseGeocode(region);
-    const url = buildJobsUrl(zip);
+    const url = buildJobsUrl(zip, term);
     const { data } = await axios.get(url);
     dispatch({ type: FETCH_JOBS, payload: data });
     callback();
